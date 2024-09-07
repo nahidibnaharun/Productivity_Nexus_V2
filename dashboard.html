@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Improved Productivity Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="icon" type="image/svg+xml" href="https://raw.githubusercontent.com/nahidibnaharun/Productivity_Nexus_2.O/47e576223ef09fbde6ed1faaf3264ddf69891722/monday-icon-svgrepo-com.svg">
+    <link rel="stylesheet" href="dashboard.css">
+    
+</head>
+<body class="bg-gray-100">
+    <!-- Gradient Header with Logout Button -->
+    <div class="gradient-bg text-white py-6 px-4 shadow-lg">
+        <h1 class="text-3xl font-bold text-center mb-2">Productivity Dashboard</h1>
+        <div id="motivationalQuote" class="text-center italic"></div>
+        <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Clock Widget -->
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="far fa-clock mr-2"></i>Clock</h2>
+                <div id="clock" class="text-4xl font-bold text-center mb-2"></div>
+                <div id="date" class="text-center text-gray-600"></div>
+            </div>
+
+            <!-- Tasks Widget (Updated) -->
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-tasks mr-2"></i>Tasks</h2>
+                <ul id="taskList" class="mb-4"></ul>
+                <input type="text" id="newTask" placeholder="New task" class="w-full p-2 mb-2 border rounded">
+                <select id="taskType" class="w-full p-2 mb-2 border rounded">
+                    <option value="Work">Work</option>
+                    <option value="School">School</option>
+                    <option value="Personal">Personal</option>
+                </select>
+                <select id="taskImportance" class="w-full p-2 mb-2 border rounded">
+                    <option value="1">1 (Low)</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5 (High)</option>
+                </select>
+                <button onclick="addTask()" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 add-button">Add Task</button>
+            </div>
+
+
+            <!-- Upcoming Events Widget -->
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-calendar-alt mr-2"></i>Upcoming Events</h2>
+                <ul id="eventList" class="mb-4"></ul>
+                <input type="text" id="newEvent" placeholder="New event" class="w-full p-2 mb-2 border rounded">
+                <input type="date" id="eventDate" class="w-full p-2 mb-2 border rounded">
+                <button onclick="addEvent()" class="w-full bg-indigo-500 text-white p-2 rounded hover:bg-indigo-600">Add Event</button>
+            </div>
+
+             <!-- Reminders Widget (Updated) -->
+             <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="far fa-bell mr-2"></i>Reminders</h2>
+                <ul id="reminderList" class="mb-4"></ul>
+                <input type="text" id="newReminder" placeholder="New reminder" class="w-full p-2 mb-2 border rounded">
+                <input type="datetime-local" id="reminderTime" class="w-full p-2 mb-2 border rounded">
+                <button onclick="addReminder()" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Add Reminder</button>
+            </div>
+
+            <!-- Productivity Score Widget -->
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-chart-line mr-2"></i>Productivity Score</h2>
+                <div class="text-center">
+                    <div id="productivityScore" class="text-5xl font-bold mb-2">0%</div>
+                    <div class="progress-bar">
+                        <div id="productivityProgress" class="progress" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Focus Timer Widget -->
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-hourglass-half mr-2"></i>Focus Timer</h2>
+                <div class="timer-controls">
+                    <button onclick="startFocusTimer()" class="start-button">Start</button>
+                    <button onclick="stopFocusTimer()" class="stop-button">Stop</button>
+                </div>
+                <div id="focusTimer" class="text-4xl font-bold text-center mb-4">25:00</div>
+                <div class="flex justify-center">
+                    <input type="number" id="timerMinutes" value="25" min="1" class="w-16 border rounded px-2 py-1">
+                    <button onclick="updateTimer()" class="bg-purple-500 text-white p-2 rounded hover:bg-purple-600">Set Timer</button>
+                </div>
+            </div>
+
+            <!-- Water Intake Tracker Widget -->
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-tint mr-2"></i>Water Intake Tracker</h2>
+                <div id="waterIntake" class="text-3xl font-bold text-center mb-2">0 / 8 glasses</div>
+                <div class="progress-bar mb-4">
+                    <div id="waterProgress" class="progress" style="width: 0%"></div>
+                </div>
+                <button onclick="addWater()" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Add Glass</button>
+            </div>
+            
+            <!-- Currecncy Exchange -->
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-money-bill-wave mr-2"></i>Currency Converter</h2>
+              
+                <div class="mb-2">
+                  <label for="fromCurrencySelect">From:</label>
+                  <select id="fromCurrencySelect" class="w-full p-2 border rounded"></select>
+                </div>
+              
+                <div class="mb-2">
+                  <label for="toCurrencySelect">To:</label>
+                  <select id="toCurrencySelect" class="w-full p-2 border rounded"></select>
+                </div>
+              
+                <div class="mb-2">
+                  <label for="amountInput">Amount:</label>
+                  <input type="number" id="amountInput" value="1" min="0" class="w-full p-2 border rounded">
+                </div>
+              
+                <p>Result: <span id="conversionResult">0.00</span></p>
+              </div>
+              
+
+           <!-- Weather Widget -->
+    <div class="widget p-6">
+        <h2 class="text-xl font-semibold mb-4"><i class="fas fa-cloud-sun-rain mr-2"></i>Weather</h2>
+        <select id="citySelect" class="w-full p-2 mb-4 border rounded" onchange="fetchWeather()">
+            <option value="Dhaka,BD">Dhaka,BD</option>
+            <option value="Chittagong,BD">Chittagong,BD</option>
+            <option value="Khulna,BD">Khulna,BD</option>
+            <option value="Rangpur,BD">Rangpur,BD</option>
+            <option value="Bogra,BD">Bogra,BD</option>
+            <option value="Mymensingh,BD">Mymensingh,BD</option>
+            <option value="Netrakona,BD">Netrakona,BD</option>
+            <option value="Sylhet,BD">Sylhet,BD</option>
+            <option value="Habiganj,BD">Habiganj,BD</option>
+            <option value="Rajshahi,BD">Rajshahi,BD</option>
+            <option value="Tongi,BD">Tongi,BD</option>
+            <option value="Narsingdi,BD">Narsingdi,BD</option>
+            <option value="Farīdpur,BD">Farīdpur,BD</option>
+            <option value="Jessore,BD">Jessore,BD</option>
+            <option value="Comilla,BD">Comilla,BD</option>
+            <option value="Feni,BD">Feni,BD</option>
+            <option value="Bāndarban,BD">Bāndarban,BD</option>
+            <option value="Cox's Bāzār,BD">Cox's Bāzār,BD</option>
+        </select>
+        <div id="weather" class="text-center">
+            <p id="weatherLocation" class="text-2xl font-bold"></p>
+            <p id="weatherTemp" class="text-3xl font-bold"></p>
+            <p id="weatherDescription" class="text-xl"></p>
+        </div>
+    </div>
+
+
+         <!-- 5-Day Weather Forecast Widget -->
+    <div class="widget p-6" id="fiveDayForecast">
+        <h2 class="text-xl font-semibold mb-4"><i class="fas fa-calendar-alt mr-2"></i>5-Day Forecast</h2>
+        <select id="citySelectAirForecast" class="w-full p-2 mb-4 border rounded" onchange="fetchFiveDayForecast()">
+            <option value="Dhaka,BD">Dhaka,BD</option>
+            <option value="Chittagong,BD">Chittagong,BD</option>
+            <option value="Khulna,BD">Khulna,BD</option>
+            <option value="Rangpur,BD">Rangpur,BD</option>
+            <option value="Bogra,BD">Bogra,BD</option>
+            <option value="Mymensingh,BD">Mymensingh,BD</option>
+            <option value="Netrakona,BD">Netrakona,BD</option>
+            <option value="Sylhet,BD">Sylhet,BD</option>
+            <option value="Habiganj,BD">Habiganj,BD</option>
+            <option value="Rajshahi,BD">Rajshahi,BD</option>
+            <option value="Tongi,BD">Tongi,BD</option>
+            <option value="Narsingdi,BD">Narsingdi,BD</option>
+            <option value="Farīdpur,BD">Farīdpur,BD</option>
+            <option value="Jessore,BD">Jessore,BD</option>
+            <option value="Comilla,BD">Comilla,BD</option>
+            <option value="Feni,BD">Feni,BD</option>
+            <option value="Bāndarban,BD">Bāndarban,BD</option>
+            <option value="Cox's Bāzār,BD">Cox's Bāzār,BD</option>
+        </select>
+        <ul id="forecastList" class="list-none p-0"></ul>
+    </div>
+
+<!-- Air Pollution Widget -->
+<div class="widget p-6" id="airPollutionWidget">
+    <h2 class="text-xl font-semibold mb-4"><i class="fas fa-smog mr-2"></i>Air Quality</h2>
+    <div class="flex items-center mb-2">
+        <label for="citySelectAirQuality" class="mr-2">City:</label>
+        <select id="citySelectAirQuality" class="w-full p-2 mb-2 border rounded" onchange="fetchAirPollutionData()">
+            <option value="Dhaka,BD">Dhaka,BD</option>
+            <option value="Chittagong,BD">Chittagong,BD</option>
+            <option value="Khulna,BD">Khulna,BD</option>
+            <option value="Rangpur,BD">Rangpur,BD</option>
+            <option value="Bogra,BD">Bogra,BD</option>
+            <option value="Mymensingh,BD">Mymensingh,BD</option>
+            <option value="Netrakona,BD">Netrakona,BD</option>
+            <option value="Sylhet,BD">Sylhet,BD</option>
+            <option value="Habiganj,BD">Habiganj,BD</option>
+            <option value="Rajshahi,BD">Rajshahi,BD</option>
+            <option value="Tongi,BD">Tongi,BD</option>
+            <option value="Narsingdi,BD">Narsingdi,BD</option>
+            <option value="Farīdpur,BD">Farīdpur,BD</option>
+            <option value="Jessore,BD">Jessore,BD</option>
+            <option value="Comilla,BD">Comilla,BD</option>
+            <option value="Feni,BD">Feni,BD</option>
+            <option value="Bāndarban,BD">Bāndarban,BD</option>
+            <option value="Cox's Bāzār,BD">Cox's Bāzār,BD</option>
+        </select>
+    </div>
+    <div id="airQualityData" class="text-center">
+        <p id="aqiIndex" class="text-2xl font-bold mb-2"></p>
+        <p id="airQualityDescription" class="text-lg mb-2"></p>
+        <ul id="pollutantList" class="list-none p-0"></ul>
+    </div>
+</div>
+
+            <!-- Book Tracker Widget -->
+            <div class="widget p-6 book-tracker">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-book mr-2"></i>Book Tracker</h2>
+                <input type="text" id="newBookName" placeholder="Book Name" class="w-full p-2 mb-2 border rounded">
+                <input type="datetime-local" id="bookDateTime" class="w-full p-2 mb-2 border rounded">
+                <button onclick="addBook()" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Add Book</button>
+                <ul id="bookList" class="mb-4"></ul>
+            </div>
+
+            <!-- Social Links Widget -->
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-share-alt mr-2"></i>Social</h2>
+                <ul class="social-links">
+                    <li><a href="https://www.facebook.com/messages" target="_blank" class="facebook"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="https://mail.google.com" target="_blank" class="gmail"><i class="fab fa-google"></i> Gmail</a></li>
+                    <li><a href="https://web.telegram.org" target="_blank" class="telegram"><i class="fab fa-telegram-plane"></i> Telegram</a></li>
+                    <li><a href="https://www.x.com" target="_blank" class="twitter"><i class="fab fa-twitter"></i> X (Twitter)</a></li>
+                    <li><a href="https://www.notion.so" target="_blank" class="notion"><i class="fas fa-book"></i> Notion</a></li>
+                    <li><a href="https://discord.com/app" target="_blank" class="discord"><i class="fas fa-book"></i> Discord</a></li>
+                    <li><a href="https://web.whatsapp.com" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                </ul>
+            </div>
+	            <!-- Competitive Programming Widget -->
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-code mr-2"></i>Competitive Programming</h2>
+                <ul class="social-links">
+                    <li><a href="https://codeforces.com/" target="_blank" class="codeforces"><i class="fas fa-code"></i> Codeforces</a></li>
+                    <li><a href="https://atcoder.jp/" target="_blank" class="atcoder"><i class="fas fa-code"></i> AtCoder</a></li>
+                    <li><a href="https://leetcode.com/" target="_blank" class="leetcode"><i class="fas fa-code"></i> LeetCode</a></li>
+                    <li><a href="https://projecteuler.net/" target="_blank" class="projecteuler"><i class="fas fa-code"></i> Project Euler</a></li>
+                    <li><a href="https://www.codechef.com/" target="_blank" class="codechef"><i class="fas fa-code"></i> CodeChef</a></li>
+                    <li><a href="https://www.hackerrank.com/" target="_blank" class="hackerrank"><i class="fas fa-code"></i> HackerRank</a></li>
+                    <li><a href="https://www.topcoder.com/" target="_blank" class="topcoder"><i class="fas fa-code"></i> TopCoder</a></li>
+                </ul>
+            </div>
+<!-- AI Widget -->
+<div class="widget p-6">
+    <h2 class="text-xl font-semibold mb-4"><i class="fas fa-robot mr-2"></i>AI Assistant</h2>
+    <div class="flex items-center mb-2">
+        <select id="aiPlatformSelect" class="w-full p-2 mb-2 border rounded" onchange="updateAIIcon()">
+            <option value="gemini">Gemini</option>
+            <option value="aistudio">AI Studio</option>
+            <option value="openai">ChatGPT</option>
+            <option value="perplexity">Perplexity</option>
+            <option value="claude">Claude</option>
+        </select>
+        <span id="aiIcon" class="ml-2"><i class="fas fa-question-circle"></i></span> </div>
+    <textarea id="aiPrompt" placeholder="Enter your prompt here..." class="w-full p-2 mb-2 border rounded"></textarea>
+    <button id="submitPrompt" class="w-full p-2 rounded hover:scale-105 animated-button mb-2">Submit</button>
+</div>
+
+            <!-- Mindfulness Breathing Exercise Widget -->
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-lungs mr-2"></i>Mindfulness Breathing</h2>
+                <div id="breathingExercise" class="text-center">
+                    <div class="breathing-container mx-auto mb-4">
+                        <div id="breathingCircle" class="breathing-circle"></div>
+                    </div>
+                    <div id="breathingText" class="text-2xl font-bold mb-4">Breathe In</div>
+                    <div id="cycleCounter" class="text-lg mb-4">Cycles: 0</div>
+                    <button id="startBreathing" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 mr-2">Start Exercise</button>
+                    <button id="resetBreathing" class="bg-red-500 text-white p-2 rounded hover:bg-red-600">Reset</button>
+                </div>
+            </div>
+<!--calculator-->
+            <div class="widget p-6">
+                <h2 class="text-xl font-semibold mb-4">
+                  <i class="fas fa-calculator mr-2"></i>Calculator
+                </h2>
+                <div class="calculator">
+                  <input
+                    type="text"
+                    id="display"
+                    class="w-full p-2 mb-4 border rounded text-right"
+                    readonly
+                  />
+                  <div class="grid grid-cols-4 gap-2">
+                    <button class="calc-button" onclick="appendNumber('7')">7</button>
+                    <button class="calc-button" onclick="appendNumber('8')">8</button>
+                    <button class="calc-button" onclick="appendNumber('9')">9</button>
+                    <button class="calc-button" onclick="appendOperator('/')">/</button>
+                    <button class="calc-button" onclick="appendNumber('4')">4</button>
+                    <button class="calc-button" onclick="appendNumber('5')">5</button>
+                    <button class="calc-button" onclick="appendNumber('6')">6</button>
+                    <button class="calc-button" onclick="appendOperator('*')">*</button>
+                    <button class="calc-button" onclick="appendNumber('1')">1</button>
+                    <button class="calc-button" onclick="appendNumber('2')">2</button>
+                    <button class="calc-button" onclick="appendNumber('3')">3</button>
+                    <button class="calc-button" onclick="appendOperator('-')">-</button>
+                    <button class="calc-button" onclick="appendNumber('0')">0</button>
+                    <button class="calc-button" onclick="appendNumber('.')">.</button>
+                    <button class="calc-button" onclick="calculate()">=</button>
+                    <button class="calc-button" onclick="appendOperator('+')">+</button>
+                  </div>
+                  <button
+                    class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 mt-4"
+                    onclick="clearDisplay()"
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+
+            <!-- Notes Widget -->
+            <div class="widget p-6" id="notesWidget">
+                <h2 class="text-xl font-semibold mb-4"><i class="fas fa-sticky-note mr-2"></i>Notes</h2>
+                <textarea id="quickNotes" placeholder="Take some notes..." class="w-full p-2 mb-2 border rounded"></textarea>
+                <button onclick="saveNotes()" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 save-notes-button">Save Notes</button>
+            </div>
+<!--mind games--->
+<div class="widget p-6">
+    <h2 class="text-xl font-semibold mb-4"><i class="fas fa-puzzle-piece mr-2"></i>Memory Match</h2>
+    <div class="level-select">
+        <label for="level">Choose Difficulty:</label>
+        <select id="level">
+            <option value="easy">Easy (16)</option>
+            <option value="medium">Medium (25)</option>
+            <option value="hard">Hard (36)</option>
+        </select>
+        <button id="startButton">Start Game</button>
+    </div>
+    <div class="game-container" id="gameContainer"></div>
+    <div class="score-container">
+        <p>Score: <span id="score">0</span></p>
+        <p>Moves: <span id="moves">0</span></p>
+    </div>
+</div>
+
+<!-- Sudoku Widget -->
+<div id="sudoku-widget" class="widget p-6">
+  <h2 class="text-xl font-semibold mb-4">Sudoku Game</h2>
+  <div id="high-score" class="text-center text-2xl font-bold mb-2">High Score: 0</div>
+  <div id="lives" class="text-center text-2xl font-bold mb-4">Lives: 3</div>
+  <div id="sudoku-board" class="grid grid-cols-9 gap-1 mx-auto"></div>
+  <div class="flex justify-between flex-wrap mt-4">
+    <button id="new-game" class="w-full bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white p-2 rounded hover:scale-105 animated-button mb-2">New Game</button>
+    <button id="solve" class="w-full bg-gradient-to-r from-red-400 via-red-500 to-red-600 text-white p-2 rounded hover:scale-105 animated-button mb-2">Solution</button>
+    <button id="hint" class="w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white p-2 rounded hover:scale-105 animated-button mb-2">Hint</button>
+    <button id="check-solved" class="w-full bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white p-2 rounded hover:scale-105 animated-button mb-2">Check Solved</button>
+  </div>
+</div>
+
+<!-- MAP -->
+<div class="widget p-6">
+    <h2 class="text-xl font-semibold mb-4"><i class="fas fa-map-marker-alt mr-2"></i>Location</h2>
+    <div id="map" style="height: 300px;"></div>
+    <p class="mt-2">Latitude: <span id="latitude"></span></p>
+    <p class="mt-1">Longitude: <span id="longitude"></span></p>
+</div>
+
+
+
+
+ <!-- Typing Test Widget -->
+<div class="widget p-6" id="typingTestWidget">
+    <h2 class="text-xl font-semibold mb-4"><i class="fas fa-keyboard mr-2"></i>Typing Test</h2>
+    <div class="text-center mb-4">
+        <p id="typingTestText" class="text-lg mb-4">Type the following text:</p>
+        <p id="textToType" class="font-bold text-xl mb-4">The quick brown fox jumps over the lazy dog.</p>
+    </div>
+    <textarea id="userInput" placeholder="Start typing here..." class="w-full p-2 mb-2 border rounded" oninput="checkTyping()"></textarea>
+    <div id="result" class="text-center mt-4">
+        <p id="wordsPerMinute" class="text-lg"></p>
+        <p id="accuracy" class="text-lg"></p>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    </div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script> 
+    <script src="dashboard.js"></script>
+</body>
+</html>

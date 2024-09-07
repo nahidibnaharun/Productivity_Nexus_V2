@@ -1,0 +1,229 @@
+/* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2, #ff7e5f, #feb47b);
+    background-size: 300% 300%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    color: #333;
+    animation: gradientAnimation 15s ease infinite;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.container:hover {
+    background-color: rgba(255, 255, 255, 0.85);
+    transform: scale(1.02);
+}
+
+/* Gradient animation for h1, h2, and logo */
+.gradient-text {
+    background: linear-gradient(135deg, #667eea, #764ba2, #ff7e5f, #feb47b);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientTextAnimation 15s ease infinite;
+}
+
+@keyframes gradientTextAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Input field styles */
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+input {
+    width: 100%;
+    padding: 12px 40px;
+    margin: 8px 0;
+    border: 2px solid #ddd;
+    border-radius: 50px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    color: #333;
+    background-clip: padding-box;
+}
+
+/* Placeholder gradient animation */
+.input-animate::placeholder {
+    color: transparent;
+    background: linear-gradient(135deg, #667eea, #764ba2, #ff7e5f, #feb47b);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    animation: placeholderAnimation 15s ease infinite;
+}
+
+@keyframes placeholderAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Professional focus animation for input fields */
+.input-animate:focus {
+    border-color: #667eea;
+    outline: none;
+    animation: inputFocusAnimation 0.5s ease-out forwards;
+}
+
+@keyframes inputFocusAnimation {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+    }
+    100% {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(102, 126, 234, 0.7);
+    }
+}
+
+/* Button styles */
+button {
+    background: linear-gradient(135deg, #667eea, #764ba2, #ff7e5f, #feb47b);
+    background-size: 300% 300%;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 20px;
+    animation: buttonGradientAnimation 15s ease infinite;
+}
+
+/* Button hover animation */
+.btn-animate:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes buttonGradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Original animation for the logo/sign (maintaining its effect) */
+.logo {
+    font-size: 3em;
+    animation: logoPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.switch {
+    margin-top: 20px;
+    color: #666;
+}
+
+.switch a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.switch a:hover {
+    color: #764ba2;
+}
+
+/* Tagline with gradient animation */
+.tagline {
+    font-style: italic;
+    color: transparent; /* Set color to transparent */
+    background: linear-gradient(135deg, #667eea, #764ba2, #ff7e5f, #feb47b);
+    -webkit-background-clip: text; /* Apply gradient to text */
+    -webkit-text-fill-color: transparent;
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite; 
+    margin-bottom: 30px;
+}
+/* ... other styles for index.html ... */
+.tab-icon {
+    width: 30px; 
+    height: 30px;
+    background-image: url('file:///D:/download/nahid/project_prime/monday-icon-svgrepo-com.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    display: inline-block;
+    margin-right: 8px;
+    animation: iconAnimation 2s linear infinite;
+}
+
+@keyframes iconAnimation {
+    0% {
+        transform: scale(1);
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        transform: scale(1.1);
+        filter: hue-rotate(180deg);
+    }
+    100% {
+        transform: scale(1);
+        filter: hue-rotate(360deg);
+    }
+}
