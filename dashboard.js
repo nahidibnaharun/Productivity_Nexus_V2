@@ -1015,12 +1015,12 @@ const toCurrencySelect = document.getElementById('toCurrencySelect');
 const amountInput = document.getElementById('amountInput');
 const conversionResult = document.getElementById('conversionResult');
 
-let latestRates = {}; // Store latest rates
+let latestRates = {}; 
 
-// Fetch Latest Exchange Rates
+// Fetch Latest Exchange Rates (with a CORS proxy)
 function fetchLatestRates() {
-  const apiKey = 'ba145ba106ad93c5bb9197747a808208'; // Replace with your actual API key
-  const apiUrl = `https://data.fixer.io/api/latest?access_key=${apiKey}`;
+  const apiKey = 'ba145ba106ad93c5bb9197747a808208null'; // Replace with your actual API key
+  const apiUrl = `https://data.fixer.io/api/latest?access_key=${apiKey}`; // Using a CORS proxy
 
   fetch(apiUrl)
     .then(response => {
@@ -1072,6 +1072,17 @@ function calculateConversion() {
     conversionResult.textContent = 'Error: Rates not available.';
   }
 }
+
+// Event listeners for real-time conversion
+window.onload = function() {
+  fetchLatestRates(); // Fetch latest rates on page load
+
+  fromCurrencySelect.addEventListener('change', calculateConversion);
+  toCurrencySelect.addEventListener('change', calculateConversion);
+  amountInput.addEventListener('input', calculateConversion); // Trigger on input change
+};
+
+// ... (Your Other JavaScript Code) ... 
 
 // Event listeners for real-time conversion
 window.onload = function() {
