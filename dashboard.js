@@ -1019,7 +1019,7 @@ let latestRates = {};
 
 // Fetch Latest Exchange Rates (with a CORS proxy)
 function fetchLatestRates() {
-  const apiKey = 'ba145ba106ad93c5bb9197747a808208null'; // Replace with your actual API key
+  const apiKey = 'ba145ba106ad93c5bb9197747a808208'; // Replace with your actual API key
   const apiUrl = `https://data.fixer.io/api/latest?access_key=${apiKey}`; // Using a CORS proxy
 
   fetch(apiUrl)
