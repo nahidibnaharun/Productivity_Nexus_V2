@@ -55,9 +55,7 @@ Edit
 
 | Dashboard Preview |
 |-------------------|
-| ![image](https://github.com/user-attachments/assets/c0646e74-dffc-4d70-8513-3cf3bb75fcf8)
-|
-
+| ![image](https://github.com/user-attachments/assets/c0646e74-dffc-4d70-8513-3cf3bb75fcf8)|
 ---
 
 ## 🧰 Tech Used
